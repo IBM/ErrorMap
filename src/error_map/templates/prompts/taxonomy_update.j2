@@ -1,0 +1,95 @@
+You are an expert analyst. Your job is to evaluate evidence step by step, consider alternatives, and reach a justified conclusion. Reasoning: high.
+
+# Instruction
+## Context
+- **Goal**: You goal is to review the given reference list based on the input data for the specified use case, then update the reference list if needed.
+    - You will be given a reference cluster list, which is built on existing data. The reference list will be used to classify new data points.
+    - You will compare the input data with the reference list, output a rating score of the quality of the reference list, suggest potential edits, and update the reference list if needed.
+- **Reference cluster list**: The input cluster list is in JSON format with each cluster as a "cluster" element, containing the following sub-elements:
+    - **id**: category index.
+    - **name**: category name.
+    - **description**: category description used to classify data points.
+- **Data**: The input data will be a list of {{ data_type }} tuples, including the following elements:
+    - **text**: {{ data_type }} as the first tuple element.
+    - **num of occurrences**: number as the second tuple element.
+- **Use case**: Update the taxonomy that categorizes model errors based on the specific skills the model failed to demonstrate in each example.
+{% if parent_category %}
+All of these errors have already been labeled under the category: *{{ parent_category }}*.
+Please ensure that you assign each error to more specific and informative sub-categories that go beyond the general label "{{ parent_category }}".
+Focus on identifying the underlying skills or error types that provide deeper insight.
+{% endif %}
+
+## Requirements
+
+### Format
+
+- Output clusters in **JSON format** with each cluster as an object in a `clusters` array.
+- Each cluster must include:
+  - `"id"`: category number starting from 1.
+  - `"name"`: category name (max {{ cluster_name_length }} words), either a verb or noun phrase.
+  - `"description"`: category description (max {{ cluster_description_length }} words).
+- Example:
+{
+  "clusters": [
+    {
+      "id": 1,
+      "name": "Factual Error",
+      "description": "Model fails to retrieve or generate accurate information."
+    }
+  ]
+}
+
+- Total number of categories should be **no more than {{ max_num_clusters }}**.
+- Output should be in **English** only.
+
+### Quality
+
+- **No overlap or contradiction** among the categories.
+- **Name** is a concise and clear label for the category, identifies **one specific skill or ability only**. Use only phrases that are specific to each category and avoid those that are common to all categories.
+- **Name** reflects core capabilities, not domain-specific contexts, or technical choices. 
+  Example: not "Incorrect Anatomical Knowledge" but "Factual Error" (The issue is about factual accuracy, not biology specifically).
+  If the issue does not clearly map to a specific skill, classify it as "Hard to Analyze" - this applies when the error is ambiguous, subjective, or lacks sufficient context to determine its nature confidently.- **Description** differentiates one category from another.
+- **Name** and **description** can **accurately** and **consistently** classify new data points **without ambiguity**.
+- **Name** and **description** are *consistent with each other*.
+- Output clusters match the data as closely as possible, without missing important categories or adding unnecessary ones.
+- Output clusters should strive to be orthogonal, providing solid coverage of the target domain.
+- Output clusters serve the given use case well.
+- Output clusters should be specific and meaningful. Do not invent categories that are not in the data.
+
+# Reference cluster list
+{{ cluster_list }}
+
+# Data
+{{ data }}
+
+# Questions
+## Q1: Review the given reference list and the input data and provide a rating score of the reference list. The rating score should be an integer between 0 and 100, higher rating score means better quality. You should consider the following factors when rating the reference cluster list:
+- **Intrinsic quality**:
+    - 1) if the cluster list meets the *Requirements* section, with clear and consistent category names and descriptions, and no overlap or contradiction among the categories;
+    - 2) if the categories in the cluster list are relevant to the the given use case;
+    - 3) if the cluster list includes any vague categories such as "Other", "General", "Unclear", "Miscellaneous" or "Undefined".
+- **Extrinsic quality**:
+    - 1) if the cluster list can accurately and consistently classify the input data without ambiguity;
+    - 2) if there are missing categories in the cluster list but appear in the input data;
+    - 3) if there are unnecessary categories in the cluster list that do not appear in the input data.
+
+## Q2: Explain your rating score in Q1 **within {{ explanation_length }} words**.
+
+## Q3: Based on your review, decide if you need to edit the reference list to improve its quality. If yes, suggest potential edits **within {{ suggestion_length }} words**. If no, please output the original reference list.
+
+Tips:
+- You can edit the category name, description, or remove a category. You can also merge or add new categories if needed. Your edits should meet the *Requirements* section.
+- The cluster list should be a **flat list** of **mutually exclusive** categories. Sort them based on their semantic relatedness.
+- You can have *fewer than {{ max_num_clusters }} categories* in the cluster list, but **do not exceed the limit.**
+- Be **specific** about each category. **Do not include vague categories** such as "Other", "General", "Unclear", "Miscellaneous" or "Undefined" in the cluster list.
+- You can ignore low quality or ambiguous data points.
+
+## Q4: If you decide to edit the reference list, please provide your updated reference list. If you decide not to edit the reference list, please output the original reference list.
+
+## Provide your answers between the following tags:
+"rating_score" - integer between 0 and 100
+"explanation" - explanation of your rating score within {{ explanation_length }} words
+"suggestions" - suggested edits within {{ suggestion_length }} words, or "N/A" if no edits needed
+"clusters" - your updated cluster list if you decided to edit the reference list, or the original reference list if no edits made
+
+# Output

@@ -1,0 +1,74 @@
+You are an expert analyst. Your job is to evaluate evidence step by step, consider alternatives, and reach a justified conclusion. Reasoning: high.
+
+# Instruction
+## Context
+- **Goal**: Your goal is to cluster the input data into meaningful categories for the given use case.
+- **Data**: The input data will be a list of {{ data_type }} tuples, including the following elements:
+    - **text**: {{ data_type }} as the first tuple element.
+    - **num of occurrences**: number as the second tuple element.
+- **Use case**: Generate a taxonomy that categorizes model errors based on the specific skills the model failed to demonstrate in each example.
+{% if parent_category %}
+All of these errors have already been labeled under the category: *{{ parent_category }}*.
+Please ensure that you assign each error to more specific and informative sub-categories that go beyond the general label "{{ parent_category }}".
+Focus on identifying the underlying skills or error types that provide deeper insight.
+{% endif %}
+
+## Requirements
+
+#### Format
+
+- Output clusters in **JSON format** with each cluster as an object in a `clusters` array.
+- Each cluster must include:
+  - `"id"`: category number starting from 1.
+  - `"name"`: category name (max {{ cluster_name_length }} words), either a verb or noun phrase.
+  - `"description"`: category description (max {{ cluster_description_length }} words).
+- Example:
+{
+  "clusters": [
+    {
+      "id": 1,
+      "name": "Factual Error",
+      "description": "Model fails to retrieve or generate accurate information."
+    }
+  ]
+}
+
+- Total number of categories should be **no more than {{ max_num_clusters }}**.
+- Output should be in **English** only.
+
+### Quality
+
+- **No overlap or contradiction** among the categories.
+- **Name** is a concise and clear label for the category, identifies **one specific skill or ability only**. Use only phrases that are specific to each category and avoid those that are common to all categories.
+- **Name** reflects core capabilities, not domain-specific contexts, or technical choices. 
+  Example: not "Incorrect Anatomical Knowledge" but "Factual Error" (The issue is about factual accuracy, not biology specifically).
+  If the issue does not clearly map to a specific skill, classify it as "Hard to Analyze" - this applies when the error is ambiguous, subjective, or lacks sufficient context to determine its nature confidently.
+- **Description** differentiates one category from another.
+- **Name** and **description** can **accurately** and **consistently** classify new data points **without ambiguity**.
+- **Name** and **description** are *consistent with each other*.
+- Output clusters match the data as closely as possible, without missing important categories or adding unnecessary ones.
+- Output clusters should strive to be orthogonal, providing solid coverage of the target domain.
+- Output clusters serve the given use case well.
+- Output clusters should be specific and meaningful. Do not invent categories that are not in the data.
+
+
+# Data
+{{ data }}
+
+# Questions
+## Q1. Please generate a cluster list from the input data that meets the requirements.
+
+Tips
+
+- **User Feedback is MANDATORY**: You MUST address any previous user feedback in your clustering
+- If user feedback was provided, explicitly explain how you've incorporated their specific concerns and suggestions
+- The cluster list should be a **flat list** of **mutually exclusive** categories. Sort them based on their semantic relatedness.
+- Though you should aim for {{ max_num_clusters }} categories, you can have *fewer than {{ max_num_clusters }} categories* in the cluster list;  but **do not exceed the limit.** 
+- Be **specific** about each category. **Do not include vague categories** such as "Other", "General", "Unclear", "Miscellaneous" or "Undefined" in the cluster list.
+- You can ignore low quality or ambiguous data points.
+
+## Q2. Why did you cluster the data the way you did? Explain your reasoning **within {{ explanation_length }} words**. Include how you addressed any user feedback.
+
+## Provide your answers in the tags: "clusters" - your generated cluster list with no more than {{ max_num_clusters }} categories, "explanation" - explanation of your reasoning process within {{ explanation_length }} words.
+
+# Output

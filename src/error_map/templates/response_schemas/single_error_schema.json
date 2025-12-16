@@ -1,0 +1,32 @@
+{
+  "type": "object",
+  "properties": {
+    "required_criteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "criterion": { "type": "string" },
+          "present_in_wrong": { "type": "boolean" },
+          "quality": {
+            "type": "string",
+            "enum": ["incorrect", "correct", "partially correct"]
+          },
+          "evidence": { "type": "string" },
+          "comment": { "type": "string" }
+        },
+        "required": ["criterion", "present_in_wrong", "quality", "evidence", "comment"]
+      },
+      "minItems": 1
+    },
+    "final_answer": {
+      "type": "object",
+      "properties": {
+        "error_summary": { "type": "string" },
+        "error_title": { "type": "string" }
+      },
+      "required": ["error_summary", "error_title"]
+    }
+  },
+  "required": ["required_criteria", "final_answer"]
+}

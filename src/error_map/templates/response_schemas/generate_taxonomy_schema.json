@@ -1,0 +1,24 @@
+
+{
+  "type": "object",
+  "properties": {
+    "clusters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "description": { "type": "string" }
+        },
+        "required": ["id", "description"],
+        "additionalProperties": false
+      }
+    },
+    "explanation": {
+      "type": "string"
+    }
+  },
+  "required": ["clusters", "explanation"],
+  "additionalProperties": false
+}

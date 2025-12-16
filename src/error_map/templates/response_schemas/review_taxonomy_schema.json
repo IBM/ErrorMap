@@ -1,0 +1,49 @@
+{
+    "type": "object",
+    "properties": {
+      "rating_score": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 100  
+      },
+      "explanation": {
+        "type": "string"
+      },
+      "suggestions": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "clusters": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "description"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": [
+      "rating_score",
+      "explanation",
+      "suggestions",
+      "clusters"
+    ],
+    "additionalProperties": false
+  }

@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "properties": {
+    "classified_errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "error_text": {
+            "type": "string",
+            "description": "The error message or text"
+          },
+          "category": {
+            "type": "string",
+            "description": "The category assigned to the error"
+          }
+        },
+        "required": ["error_text", "category"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["classified_errors"],
+  "additionalProperties": false
+}
