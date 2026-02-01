@@ -359,3 +359,13 @@ mypy src/
 
 ## Citation
 
+```bibtex
+@misc{ashurytahan2026errormaperroratlaschartingfailure,
+      title={ErrorMap and ErrorAtlas: Charting the Failure Landscape of Large Language Models}, 
+      author={Shir Ashury-Tahan and Yifan Mai and Elron Bandel and Michal Shmueli-Scheuer and Leshem Choshen},
+      year={2026},
+      eprint={2601.15812},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2601.15812}, 
+}
